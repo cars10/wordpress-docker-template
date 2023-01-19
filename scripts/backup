@@ -15,8 +15,8 @@ DATA_BACKUP="${DIR_PATH}/wordpress_data.zip"
 mkdir -p $DIR_PATH
 
 # Databse backup
-docker-compose up -d db
-docker-compose exec -T db mysqldump -u"$DB_USER" -p"$DB_PASS" $DB_NAME > $DB_BACKUP
+docker compose up -d db
+docker compose exec -T db mysqldump -u"$DB_USER" -p"$DB_PASS" $DB_NAME > $DB_BACKUP
 gzip -4 $DB_BACKUP
 
 # Data backup

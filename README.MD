@@ -67,7 +67,16 @@ To change nginx settings adjust the config in `./nginx/nginx.conf`. To change th
 Generate SSL certificates:
 
 ```
+docker compose down
+
+# edit nginx/nginx.conf and remove the include at the end
+
+docker compose up -d nginx
 docker compose exec nginx certbot certonly --nginx -d example.com --email you@example.com --agree-tos --non-interactive --expand
+docker compose down
+
+# edit nginx/nginx.conf and add the include again
+
 ```
 
 Certificates are automatically renewed weekly via `renew_ssl` script in `/etc/cron.weekly`. If needed you can renew manually like this:
