@@ -1,4 +1,4 @@
-FROM wordpress:5.8-fpm
+FROM wordpress:6-fpm
 
 RUN apt-get update && apt-get install -y vim nano && rm -rf /var/lib/apt/lists/*
 
