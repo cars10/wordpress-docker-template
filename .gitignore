@@ -1,7 +1,9 @@
 .env
 wordpress/data*
+backups
 
 logs/nginx/*
 !/logs/nginx/.keep
 
 CREDS.md
+
