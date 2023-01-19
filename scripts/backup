@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# 1. copy into /etc/cron.daily/ or /etc/cron.weekly
+# 2. adjust the PROJECT_PATH
+#
+
+cd PROJECT_PATH
+
+source .env
+FORMATTED_TIMESTAMP=$(date +%Y_%m_%d-%H_%M_%S)
+DIR_PATH="backups/${FORMATTED_TIMESTAMP}"
+DB_BACKUP="${DIR_PATH}/db.sql"
+DATA_BACKUP="${DIR_PATH}/wordpress_data.zip"
+
+mkdir -p $DIR_PATH
+
+# Databse backup
+docker-compose up -d db
+docker-compose exec -T db mysqldump -u"$DB_USER" -p"$DB_PASS" $DB_NAME > $DB_BACKUP
+gzip -4 $DB_BACKUP
+
+# Data backup
+zip -q -r $DATA_BACKUP wordpress/data

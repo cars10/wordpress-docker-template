@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  wordpress:
+    build: ./wordpress
+    restart: always
+    container_name: wordpress
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: $DB_NAME
+      WORDPRESS_DB_USER: $DB_USER
+      WORDPRESS_DB_PASSWORD: $DB_PASS
+      WORDPRESS_DEBUG: 0
+      WP_DEBUG_LOG: 0
+      WP_DEBUG_DISPLAY: 0
+    volumes:
+      - ./wordpress/data:/var/www/html
+      - ./wordpress/php_custom.ini:/usr/local/etc/php/conf.d/php_custom.ini
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.6
+    restart: always
+    container_name: db
+    ports:
+      - 127.0.0.1:3307:3306
+    environment:
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASS
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+  nginx:
+    build: ./nginx
+    restart: always
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/sites:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./wordpress/data:/var/www/html
+      - ./logs/nginx:/var/log/nginx
+      - nginx_letsencrypt:/etc/letsencrypt
+volumes:
+  db:
+  nginx_letsencrypt:
